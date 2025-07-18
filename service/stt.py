@@ -1,12 +1,14 @@
 import numpy as np
 import time
 import librosa
+import torch
 from typing import Tuple, List, Optional
 from numpy.typing import NDArray
+
 from logger_config import logger
+from util import audio as audio_util
 from model.ac import AstACModel
 from model.stt import STTModel
-from util import audio as audio_util
 
 
 class STTService:
@@ -14,17 +16,17 @@ class STTService:
         self,
         ast_ac_model: Optional[AstACModel] = None,
         stt_model: STTModel = None,
-        chunk_duration: float = 15.0,  # 15 giây mỗi chunk
-        overlap_duration: float = 3.0,  # 3 giây overlap
-        min_speech_duration: float = 0.5,  # Tối thiểu 0.5s mới coi là speech
-        confidence_threshold: float = 0.5,  # Ngưỡng confidence cho AST AC
+        chunk_duration: float = 15,
+        overlap_duration: float = 3,
+        min_speech_duration: float = 5,
+        confidence_threshold: float = 5,
         enable_denoise: bool = True,
         enable_normalize: bool = True,
         enable_silence_split: bool = True,
         enable_multiple_attempts: bool = True
     ):
         """
-        Khởi tạo Advanced STT Service với tất cả kỹ thuật cải thiện
+        Khởi tạo Advanced STT Service
         
         Args:
             ast_ac_model: Model AST AC để detect speech (optional)
@@ -33,10 +35,9 @@ class STTService:
             overlap_duration: Thời gian overlap giữa các chunk (giây)
             min_speech_duration: Thời lượng tối thiểu để coi là speech (giây)
             confidence_threshold: Ngưỡng confidence cho speech detection
-            enable_denoise: Bật tính năng giảm noise
-            enable_normalize: Bật tính năng normalize audio
-            enable_silence_split: Bật tính năng chia theo khoảng lặng
-            enable_multiple_attempts: Bật tính năng thử nhiều cách xử lý
+            enable_denoise: Giảm noise
+            enable_normalize: Tính năng normalize audio
+            enable_silence_split: Chia theo khoảng lặng
         """
         self.ast_ac_model = ast_ac_model
         self.stt_model = stt_model
@@ -390,7 +391,7 @@ class STTService:
 
     def advanced_transcribe(self, audio: NDArray[np.float32], sr: int) -> Tuple[str, float, int]:
         """
-        STT nâng cao với tất cả kỹ thuật cải thiện
+        STT nâng cao với kỹ thuật cải thiện
         """
         logger.info(f"Advanced STT Processing - duration: {len(audio)/sr:.2f}s")
         
@@ -503,7 +504,7 @@ class STTService:
                 }
             
             # 2. Process with fixed chunking (15s chunks)
-            logger.info("Speech validated ✅ - Processing with fixed 15s chunking...")
+            logger.info("Speech validated - Processing with fixed 15s chunking...")
             text, confidence, chunks_count = self.advanced_transcribe(audio, sample_rate)
             
             # 3. Create metadata
@@ -546,7 +547,7 @@ class STTService:
             # Predict với AST AC (chỉ trả về True/False)
             is_speech = self.ast_ac_model.predict(sample_audio, 16000)
             
-            logger.info(f"Speech validation result: {'✅ Speech detected' if is_speech else '❌ No speech detected'}")
+            logger.info(f"Speech validation result: {'Speech detected' if is_speech else 'No speech detected'}")
             return is_speech
             
         except Exception as e:

@@ -8,7 +8,6 @@ from loguru import logger
 
 MODEL_INFO_FILE_NAME = "model_info.json"
 
-
 def download_hf_model(
         model_repo_id: str,
         model_revision: str,

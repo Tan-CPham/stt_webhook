@@ -2,11 +2,13 @@ fastapi==0.115.8
 uvicorn
 pydantic
 python-dotenv
-torch
+torch==2.5.1
+torchaudio==2.5.1
 transformers==4.48.3
 soundfile
 pydub
 numpy
 scipy==1.15.1
 loguru==0.7.3
-huggingface-hub 
+huggingface-hub
+underthesea==6.8.4

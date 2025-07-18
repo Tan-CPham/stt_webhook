@@ -1,0 +1,12 @@
+fastapi==0.115.8
+uvicorn
+pydantic
+python-dotenv
+torch
+transformers==4.48.3
+soundfile
+pydub
+numpy
+scipy==1.15.1
+loguru==0.7.3
+huggingface-hub 

@@ -26,7 +26,7 @@ DEVICE = "cuda" if "cuda" in os.getenv("DEVICE", "cpu").lower() else "cpu"
 # Model configurations - must be set in .env
 AST_AC_MODEL_REPO_ID = get_env_variable("AST_AC_MODEL_REPO_ID")
 AST_AC_MODEL_REVISION = get_env_variable("AST_AC_MODEL_REVISION")
-STT_MODEL_PATH = get_env_variable("STT_MODEL_WAV2VEC2_PATH")
+STT_MODEL_PATH = get_env_variable("STT_MODEL_DICO_PATH")
 FEATURE_EXTRACTOR_PATH = get_env_variable("FEATURE_EXTRACTOR_PATH")
 TOKENIZER_PATH = get_env_variable("TOKENIZER_PATH")
 HF_TOKEN = get_env_variable("HF_TOKEN", None)

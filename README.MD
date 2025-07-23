@@ -4,7 +4,7 @@ A backend system for Speech-to-Text (STT) processing, featuring a webhook API fo
 
 ## System Requirements
 
-- Python 3.10+
+- Python 3.10+ and < 3.12
 - CUDA-compatible GPU (Optional, for accelerated processing)
 - RAM: 4GB Minimum
 - Disk Space: 5GB+ for model storage
@@ -17,7 +17,48 @@ git clone https://github.com/Tan-CPham/stt_webhook
 cd speech_to_text
 ```
 
-### 2. Create a Virtual Environment
+### 2. Install FFmpeg
+
+FFmpeg is required to process and convert various audio formats. Choose the method that best suits your operating system.
+
+#### Method 1: Using a Package Manager (Recommended)
+
+This is the easiest and most recommended way to install FFmpeg.
+
+*   **On Linux (Debian/Ubuntu):**
+    ```bash
+    sudo apt update && sudo apt install ffmpeg
+    ```
+
+*   **On macOS (using [Homebrew](https://brew.sh/)):**
+    ```bash
+    brew install ffmpeg
+    ```
+
+*   **On Windows (using [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) or [Chocolatey](https://chocolatey.org/)):**
+    ```powershell
+    # Using Winget (recommended, built-in on Windows 11)
+    winget install "FFmpeg (Gyan.dev)"
+
+    # Or using Chocolatey
+    choco install ffmpeg
+    ```
+
+#### Method 2: Manual Installation
+
+Use this method if you cannot use a package manager or need a specific version.
+
+1.  **Download a pre-built binary** for your OS from a trusted source like [FFmpeg Builds](https://github.com/BtbN/FFmpeg-Builds/releases).
+2.  **Extract the archive** to a permanent location on your computer (e.g., `C:\ffmpeg` on Windows, or `/opt/ffmpeg` on Linux).
+3.  **Add the `bin` directory** inside the extracted folder to your system's `PATH` environment variable so you can run `ffmpeg` from any terminal. (See platform-specific instructions below).
+
+---
+
+**To verify your installation, open a *new* terminal window and run:**
+```bash
+ffmpeg -version
+
+### 3. Create a Virtual Environment
 ```bash
 python -m venv env
 # Windows
@@ -26,7 +67,7 @@ env\Scripts\activate
 source env/bin/activate
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```

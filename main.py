@@ -5,7 +5,6 @@ from service.stt import STTService
 from model.stt import STTModel
 from model.ac import AstACModel
 from model.download_model import download_hf_model
-
 from logger_config import logger
 
 # Load environment variables
@@ -26,7 +25,7 @@ DEVICE = "cuda" if "cuda" in os.getenv("DEVICE", "cpu").lower() else "cpu"
 # Model configurations - must be set in .env
 AST_AC_MODEL_REPO_ID = get_env_variable("AST_AC_MODEL_REPO_ID")
 AST_AC_MODEL_REVISION = get_env_variable("AST_AC_MODEL_REVISION")
-STT_MODEL_PATH = get_env_variable("STT_MODEL_DICO_PATH")
+STT_MODEL_PATH = get_env_variable("STT_MODEL_WAV2VEC2_PATH")
 FEATURE_EXTRACTOR_PATH = get_env_variable("FEATURE_EXTRACTOR_PATH")
 TOKENIZER_PATH = get_env_variable("TOKENIZER_PATH")
 HF_TOKEN = get_env_variable("HF_TOKEN", None)
@@ -82,8 +81,8 @@ def initialize_stt_service():
         return STTService(
             ast_ac_model=None,
             stt_model=stt_model,
-            chunk_duration=15.0,
-            overlap_duration=3.0,
+            chunk_duration=10,
+            overlap_duration=1,
             enable_denoise=True,
             enable_normalize=True,
             enable_silence_split=True,
@@ -96,17 +95,15 @@ def initialize_stt_service():
 def main():
     """Main entry point - Setup models and start webhook server"""
     
-    print("Starting Speech-to-Text Service...")
-    
     # Ensure models are ready
     if not ensure_models_ready():
-        print("Failed to setup models. Check .env configuration.")
+        logger.error("Failed to setup models. Check .env configuration and network connection.")
         return
     
     # Initialize STT service
     stt_service = initialize_stt_service()
     if not stt_service:
-        print("Failed to initialize STT service.")
+        logger.error("Failed to initialize STT service. Check model paths and configurations.")
         return
     
     # Start webhook server
@@ -115,8 +112,9 @@ def main():
         initialize_webhook(stt_service)
         
         port = int(os.getenv("PORT", 8000))
-        print(f"Webhook server starting at http://0.0.0.0:{port}")
-        print(f"For local development: ngrok http {port}")
+        
+        logger.info(f"Webhook server starting at http://0.0.0.0:{port}")
+        logger.info(f"For local development, expose this port using: ngrok http {port}")
         
         start_webhook("0.0.0.0", port)
         
@@ -124,4 +122,4 @@ def main():
         logger.error(f"Error starting webhook: {e}")
 
 if __name__ == "__main__":
-    main() 
+    main()

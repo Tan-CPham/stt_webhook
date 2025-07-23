@@ -12,3 +12,6 @@ soundfile
 pydub
 numpy
 huggingface-hub
+sentencepiece
+python-multipart
+librosa

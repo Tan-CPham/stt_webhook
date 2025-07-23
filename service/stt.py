@@ -16,8 +16,8 @@ class STTService:
         self,
         ast_ac_model: Optional[AstACModel] = None,
         stt_model: STTModel = None,
-        chunk_duration: float = 15,
-        overlap_duration: float = 3,
+        chunk_duration: float = 10,
+        overlap_duration: float = 1,
         min_speech_duration: float = 5,
         confidence_threshold: float = 5,
         enable_denoise: bool = True,
@@ -87,7 +87,7 @@ class STTService:
 
     def normalize_audio(self, audio: NDArray[np.float32]) -> NDArray[np.float32]:
         """
-        Normalize audio để tăng chất lượng
+        Normalize audio
         """
         if not self.enable_normalize:
             return audio
@@ -108,7 +108,7 @@ class STTService:
     def split_by_silence(self, audio: NDArray[np.float32], sr: int, 
                         min_silence_len: float = 0.5, silence_thresh: float = -40) -> List[NDArray[np.float32]]:
         """
-        Chia audio dựa trên khoảng lặng
+        Split audio based on silence
         """
         if not self.enable_silence_split:
             return [audio]
@@ -165,7 +165,7 @@ class STTService:
 
     def remove_overlap_text(self, current_text: str, prev_text: str, min_overlap_words: int = 2) -> str:
         """
-        Loại bỏ phần overlap giữa 2 đoạn text
+        Remove overlap between 2 text paragraphs
         """
         if not prev_text:
             return current_text
@@ -176,15 +176,15 @@ class STTService:
         if len(prev_words) < min_overlap_words or len(current_words) < min_overlap_words:
             return current_text
         
-        # Tìm overlap từ cuối prev_text và đầu current_text
-        max_overlap = min(len(prev_words), len(current_words), 10)  # Max 10 từ overlap
+        # Find overlap from end of prev_text and beginning of current_text
+        max_overlap = min(len(prev_words), len(current_words), 10)  # Max 10 words overlap
         
         for overlap_len in range(max_overlap, min_overlap_words-1, -1):
             prev_suffix = " ".join(prev_words[-overlap_len:])
             current_prefix = " ".join(current_words[:overlap_len])
             
             if prev_suffix.lower() == current_prefix.lower():
-                # Tìm thấy overlap, loại bỏ phần đầu của current_text
+                # Found overlap, remove the beginning of current_text
                 return " ".join(current_words[overlap_len:])
         
         return current_text
@@ -391,7 +391,7 @@ class STTService:
 
     def advanced_transcribe(self, audio: NDArray[np.float32], sr: int) -> Tuple[str, float, int]:
         """
-        STT nâng cao với kỹ thuật cải thiện
+        Advanced STT with improved technique
         """
         logger.info(f"Advanced STT Processing - duration: {len(audio)/sr:.2f}s")
         
@@ -488,7 +488,7 @@ class STTService:
         sample_rate: int
     ) -> Tuple[str, float, dict]:
         """
-        Xử lý audio với AST AC chỉ để validate speech, sau đó dùng chunking cố định 15s
+        Xử lý audio với AST AC chỉ để validate speech, sau đó dùng chunking cố định 10s
         """
         try:
             # 1. Validate speech content using AST AC
@@ -503,8 +503,8 @@ class STTService:
                     'processing_method': 'speech_validation_failed'
                 }
             
-            # 2. Process with fixed chunking (15s chunks)
-            logger.info("Speech validated - Processing with fixed 15s chunking...")
+            # 2. Process with fixed chunking (10s chunks)
+            logger.info("Speech validated - Processing with fixed 10s chunking...")
             text, confidence, chunks_count = self.advanced_transcribe(audio, sample_rate)
             
             # 3. Create metadata

@@ -1,6 +1,6 @@
 # Speech-to-Text Webhook
 
-A backend system for Speech-to-Text (STT) processing, featuring a webhook API for seamless integration with ERP systems. Built with FastAPI and advanced AI models.
+A backend system for Speech-to-Text (STT) processing, featuring a webhook API for seamless integration with ERP systems. Built with FastAPI and AI models.
 
 ## System Requirements
 
@@ -19,7 +19,7 @@ cd speech_to_text
 
 ### 2. Install FFmpeg
 
-FFmpeg is required to process and convert various audio formats. Choose the method that best suits your operating system.
+A backend system for Speech-to-Text (STT) processing, which uses a webhook API to automatically push results to your applications. Built with FastAPI and AI models.
 
 #### Method 1: Using a Package Manager (Recommended)
 

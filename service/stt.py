@@ -532,7 +532,7 @@ class STTService:
             return True  # Không có AST AC thì coi như có speech
             
         try:
-            # Lấy sample 5s đầu để test (hoặc toàn bộ nếu ngắn hơn)
+            # Lấy sample 5s đầu để test
             sample_duration = min(5.0, len(audio) / sample_rate)
             if sample_duration < 1.0:
                 return True  # Audio quá ngắn thì skip validation
@@ -540,7 +540,7 @@ class STTService:
             sample_length = int(sample_duration * sample_rate)
             sample_audio = audio[:sample_length]
             
-            # Resample cho AST AC nếu cần
+            # Resample AST AC
             if sample_rate != 16000:
                 sample_audio = audio_util.resample_audio(sample_audio, sample_rate, 16000)
                 
@@ -552,4 +552,4 @@ class STTService:
             
         except Exception as e:
             logger.warning(f"Speech validation failed: {e}, continuing anyway...")
-            return True  # Lỗi thì coi như có speech 
+            return True

@@ -2,12 +2,16 @@
 
 A backend system for Speech-to-Text (STT) processing, which uses a webhook API to automatically push results to your applications. Built with FastAPI and AI models.
 
+---
+
 ## System Requirements
 
 - Python 3.10+ and < 3.12
 - CUDA-compatible GPU (Optional, for accelerated processing)
 - RAM: 4GB Minimum
 - Disk Space: 5GB+ for model storage
+
+---
 
 ## Installation
 
@@ -52,7 +56,7 @@ Use this method if you cannot use a package manager or need a specific version.
 2.  **Extract the archive** to a permanent location on your computer (e.g., `C:\ffmpeg` on Windows, or `/opt/ffmpeg` on Linux).
 3.  **Add the `bin` directory** inside the extracted folder to your system's `PATH` environment variable so you can run `ffmpeg` from any terminal. (See platform-specific instructions below).
 
----
+-
 **To verify your installation, open a *new* terminal window and run:**
 ```bash
 ffmpeg -version
@@ -71,6 +75,8 @@ source env/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+
+---
 
 ## Configuration
 
@@ -100,6 +106,8 @@ DEVICE=cuda  # or cpu
 ### 2. File .env.example
 Refer to the .env.example file for a sample configuration.
 
+---
+
 ## Usage
 
 ### Running the Server
@@ -110,6 +118,8 @@ python main.py
 The server will:
 1. Initialize the STT service.
 2. Start the webhook server at http://localhost:8000.
+
+---
 
 ## API Endpoints
 
@@ -152,6 +162,8 @@ Checks the health status of the server.
 }
 ```
 
+---
+
 ## Development
 
 ### Local Development with ngrok
@@ -181,6 +193,8 @@ curl -X POST "http://localhost:8000/webhook/process-audio" \
   -F "timestamp=2024-01-01T12:00:00Z"
 ```
 
+---
+
 ## Directory Structure
 
 ```
@@ -203,6 +217,8 @@ speech_to_text/
 └── audio/ 
 ```
 
+---
+
 ## Troubleshooting
 
 ### Common Issues
@@ -222,6 +238,8 @@ speech_to_text/
 4. **Environment variables missing**
    - Make sure the .env file exists
    - Verify that all required variables are set
+
+---
 
 ## Support
 

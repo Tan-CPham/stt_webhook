@@ -27,7 +27,7 @@ FFmpeg is required to process and convert various audio formats. Choose the meth
 
 #### Method 1: Using a Package Manager (Recommended)
 
-This is the easiest and most recommended way to install FFmpeg.
+  This is the easiest and most recommended way to install FFmpeg.
 
 *   **On Linux (Debian/Ubuntu):**
     ```bash
@@ -50,7 +50,7 @@ This is the easiest and most recommended way to install FFmpeg.
 
 #### Method 2: Manual Installation
 
-Use this method if you cannot use a package manager or need a specific version.
+  Use this method if you cannot use a package manager or need a specific version.
 
 1.  **Download a pre-built binary** for your OS from a trusted source like [FFmpeg Builds](https://github.com/BtbN/FFmpeg-Builds/releases).
 2.  **Extract the archive** to a permanent location on your computer (e.g., `C:\ffmpeg` on Windows, or `/opt/ffmpeg` on Linux).

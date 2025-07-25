@@ -56,7 +56,6 @@ Use this method if you cannot use a package manager or need a specific version.
 2.  **Extract the archive** to a permanent location on your computer (e.g., `C:\ffmpeg` on Windows, or `/opt/ffmpeg` on Linux).
 3.  **Add the `bin` directory** inside the extracted folder to your system's `PATH` environment variable so you can run `ffmpeg` from any terminal. (See platform-specific instructions below).
 
--
 **To verify your installation, open a *new* terminal window and run:**
 ```bash
 ffmpeg -version

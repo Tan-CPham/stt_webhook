@@ -1,4 +1,4 @@
-import os
+import os, inspect
 import sys
 from dotenv import load_dotenv
 from service.stt import STTService
@@ -6,6 +6,9 @@ from model.stt import STTModel
 from model.ac import AstACModel
 from model.download_model import download_hf_model
 from logger_config import logger
+
+print("HF cache", os.environ.get("HUGGINGFACE_HUB_CACHE"))
+print("Torch home", os.environ.get("TORCH_HOME"))
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +28,7 @@ DEVICE = "cuda" if "cuda" in os.getenv("DEVICE", "cpu").lower() else "cpu"
 # Model configurations - must be set in .env
 AST_AC_MODEL_REPO_ID = get_env_variable("AST_AC_MODEL_REPO_ID")
 AST_AC_MODEL_REVISION = get_env_variable("AST_AC_MODEL_REVISION")
-STT_MODEL_PATH = get_env_variable("STT_MODEL_WAV2VEC2_PATH")
+STT_MODEL_PATH = get_env_variable("STT_MODEL_PATH")
 FEATURE_EXTRACTOR_PATH = get_env_variable("FEATURE_EXTRACTOR_PATH")
 TOKENIZER_PATH = get_env_variable("TOKENIZER_PATH")
 HF_TOKEN = get_env_variable("HF_TOKEN", None)
@@ -55,6 +58,14 @@ def ensure_models_ready():
         ensure_model_downloaded(STT_MODEL_PATH)
         ensure_model_downloaded(FEATURE_EXTRACTOR_PATH)
         ensure_model_downloaded(TOKENIZER_PATH)
+        
+        # Also ensure AST AC model is downloaded
+        try:
+            ensure_model_downloaded(AST_AC_MODEL_REPO_ID, AST_AC_MODEL_REVISION)
+            logger.info("AST AC model ready")
+        except Exception as e:
+            logger.warning(f"AST AC model download failed: {e}, continuing without speech validation")
+        
         return True
         
     except Exception as e:
@@ -78,10 +89,22 @@ def initialize_stt_service():
             cache_dir=WEIGHT_DIR
         )
         
+        try:
+            ast_ac_model_local_path = os.path.join(WEIGHT_DIR, f"models--{AST_AC_MODEL_REPO_ID.replace('/', '--')}")
+            ast_ac_model = AstACModel(
+                model_repo_id=AST_AC_MODEL_REPO_ID,
+                model_revision=AST_AC_MODEL_REVISION,
+                model_local_dir=ast_ac_model_local_path,
+                device=DEVICE
+            )
+            logger.info("AST AC model initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize AST AC model: {e}, continuing without speech validation")
+        
         return STTService(
-            ast_ac_model=None,
+            ast_ac_model=ast_ac_model,
             stt_model=stt_model,
-            chunk_duration=10,
+            chunk_duration=20,
             overlap_duration=1,
             enable_denoise=True,
             enable_normalize=True,

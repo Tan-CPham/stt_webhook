@@ -16,7 +16,7 @@ class STTService:
         self,
         ast_ac_model: Optional[AstACModel] = None,
         stt_model: STTModel = None,
-        chunk_duration: float = 10,
+        chunk_duration: float = 20,
         overlap_duration: float = 1,
         min_speech_duration: float = 5,
         confidence_threshold: float = 5,
@@ -334,11 +334,13 @@ class STTService:
         # Apply adjustments
         adjusted_confidence = confidence + boost_factors - penalty_factors
         
-        # Ensure confidence stays in valid range with slight boost for high-quality results
-        if confidence > 90 and boost_factors > penalty_factors:
-            adjusted_confidence = min(99.5, adjusted_confidence)  # Cap at 99.5%
-        else:
-            adjusted_confidence = max(0.0, min(100.0, adjusted_confidence))
+        # Ensure confidence stays in valid range
+        adjusted_confidence = max(0.0, min(100.0, adjusted_confidence))
+        
+        # Only apply small boost for very high quality results, but don't hard-cap
+        if confidence > 95 and boost_factors > penalty_factors and boost_factors > 3.0:
+            # Small boost for excellent results, but keep it realistic
+            adjusted_confidence = min(confidence + 1.0, adjusted_confidence)
         
         return adjusted_confidence
 
